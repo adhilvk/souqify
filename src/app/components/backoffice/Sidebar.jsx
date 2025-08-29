@@ -112,7 +112,7 @@ export default function Sidebar({showSidebar, setShowSidebar}) {
   const [openMenu,setOpenMenu]=useState(false)
 
   return (
-    <div className={showSidebar?"sm:block mt-20 sm:mt-0 dark:bg-slate-800 w-64 h-screen text-slate-800 dark:text-slate-300 fixed left-0 top-0 z-40 space-y-6 overflow-y-scroll":" mt-20 sm:mt-0  hidden sm:block dark:bg-slate-800 w-64 h-screen text-slate-800 dark:text-slate-300 fixed left-0 top-0 z-40 space-y-6 overflow-y-scroll"}>
+    <div className={showSidebar?" bg-white text-slate-800 dark:text-slate-50 dark:bg-slate-600 sm:block mt-20 sm:mt-0 dark:bg-slate-800 w-64 h-screen text-slate-800 dark:text-slate-300 fixed left-0 top-0 z-40 space-y-6 overflow-y-scroll":" bg-white text-slate-800 dark:text-slate-50 dark:bg-slate-600 mt-20 sm:mt-0  hidden sm:block dark:bg-slate-800 w-64 h-screen text-slate-800 dark:text-slate-300 fixed left-0 top-0 z-40 space-y-6 overflow-y-scroll"}>
       <Link onClick={()=> setShowSidebar(false)}
  className="mb-6 block text-xl font-bold  px-6 py-4 " href="/dashboard">
         <Image

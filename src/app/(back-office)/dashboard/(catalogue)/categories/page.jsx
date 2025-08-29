@@ -1,16 +1,22 @@
 import React from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
-import Heading from "@/app/components/backoffice/PageHeader";
-
+import PageHeader from "@/app/components/backoffice/PageHeader";
+import TableActions from "@/app/components/backoffice/TableActions";
 
 export default function page() {
   return (
     <div>
       {/* header */}
-      <PageHeader heading="" href="/dashboard/categories/new"/>
-      {/* table */}
-      <h2>Categories</h2>
-    </div>
-  );
+      <PageHeader
+        heading="Categories"
+        href="/dashboard/categories/new"
+        linkTitle="Add Category"
+      />
+      {/* table actions */}
+<TableActions/>
+<div className="py-8">
+  <h2>Table</h2>
+</div>
+</div>
+);
 }

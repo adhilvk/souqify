@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: 'class', // 👈 Enable class-based dark mode
+import { withUt } from "uploadthing/tw";
+export default withUt({
+    darkMode: 'class', // 👈 Enable class-based dark mode
   content: [
     "./src/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -9,5 +10,8 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
-}
+  plugins: [ require("tailwindcss-animate"), require('@tailwindcss/forms')],
+
+});
+
+

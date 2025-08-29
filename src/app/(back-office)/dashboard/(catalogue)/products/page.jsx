@@ -1,9 +1,22 @@
-import React from 'react'
+import React from "react";
+import Link from "next/link";
+import PageHeader from "@/app/components/backoffice/PageHeader";
+import TableActions from "@/app/components/backoffice/TableActions";
 
 export default function page() {
   return (
     <div>
-        <h2>Products</h2>
-    </div>
-  )
+      {/* header */}
+      <PageHeader
+        heading="Products"
+        href="/dashboard/products/new"
+        linkTitle="Add Product"
+      />
+      {/* table actions */}
+<TableActions/>
+<div className="py-8">
+  <h2>Table</h2>
+</div>
+</div>
+);
 }

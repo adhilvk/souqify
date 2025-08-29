@@ -16,12 +16,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import ThemeSwitcherBtn from "../ThemeSwitcherBtn";
+import { DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 
 export default function Navbar({ setShowSidebar, showSidebar }) {
   const [notificationCount, setNotificationCount] = useState(0);
