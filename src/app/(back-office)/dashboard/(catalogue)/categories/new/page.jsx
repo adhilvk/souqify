@@ -8,8 +8,8 @@ import { generateSlug } from "@/lib/generateSlug";
 import ToggleInput from "@/components/ToggleInput";
 
 // 👇 Use the new wrapper
-import { categoryImageUploader } from "@/lib/uploaders";
-// import CategoryImageUploader from "@/components/backoffice/uploaders/CategoryImageUploader";
+// import { categoryImageUploader } from "@/lib/uploaders";
+import CategoryImageUploader from "@/components/backoffice/uploaders/CategoryImageUploader";
 
 export default function NewCategory() {
   const [image, setImage] = useState(null);
