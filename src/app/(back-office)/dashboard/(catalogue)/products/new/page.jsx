@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { uploadToS3 } from "@/lib/s3";
 import ImageUpload from "@/app/components/backoffice/ImageUpload";
 import { makePostRequest } from "@/lib/apiRequest";
 import SubmitButton from "@/app/components/Forminputs/SubmitButton";
 import { generateSlug } from "@/lib/generateSlug";
 import { ArrayItemsInput } from "@/app/components/Forminputs/ArrayItemsInput";
 import ToggleInput from "@/components/ToggleInput";
+import { productImageUploader } from "@/lib/uploaders";
 
 export default function NewProduct({
   label,
@@ -44,9 +44,7 @@ export default function NewProduct({
     },
   });
 
-  // Watch the toggle
   const isActive = watch("isActive");
-  console.log(isActive)
 
   const onSubmit = async (data) => {
     if (!image) {
@@ -55,9 +53,9 @@ export default function NewProduct({
     }
 
     try {
-      const fileName = `products/${Date.now()}-${image.name}`;
       const buffer = await image.arrayBuffer();
-      const imageUrl = await uploadToS3(buffer, fileName, image.type);
+      const fileName = `${Date.now()}-${image.name}`;
+      const imageUrl = await productImageUploader(buffer, fileName, image.type);
 
       const slug = generateSlug(data.title);
 
@@ -103,7 +101,6 @@ export default function NewProduct({
 
         {/* SKU & Barcode */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* SKU */}
           <div>
             <label className="block text-gray-800 dark:text-white font-semibold mb-1">
               Product SKU
@@ -117,7 +114,6 @@ export default function NewProduct({
             />
           </div>
 
-          {/* Barcode */}
           <div>
             <label className="block text-gray-800 dark:text-white font-semibold mb-1">
               Product Barcode
@@ -134,7 +130,6 @@ export default function NewProduct({
 
         {/* Price & Sale Price */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Price */}
           <div>
             <label className="block text-gray-800 dark:text-white font-semibold mb-1">
               Product Price (Before Discount)
@@ -148,7 +143,6 @@ export default function NewProduct({
             />
           </div>
 
-          {/* Sale Price */}
           <div>
             <label className="block text-gray-800 dark:text-white font-semibold mb-1">
               Product Sale Price (Discounted)
@@ -165,7 +159,6 @@ export default function NewProduct({
 
         {/* Category & Farmer */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Category */}
           <div>
             <label className="block text-gray-800 dark:text-white font-semibold mb-1">
               Select Category
@@ -184,7 +177,6 @@ export default function NewProduct({
             </select>
           </div>
 
-          {/* Farmer */}
           <div>
             <label className="block text-gray-800 dark:text-white font-semibold mb-1">
               Select Farmer

@@ -6,6 +6,8 @@ import { makePostRequest } from "@/lib/apiRequest";
 import SubmitButton from "@/app/components/Forminputs/SubmitButton";
 import { generateSlug } from "@/lib/generateSlug";
 import { generateCouponCode } from "@/lib/generateCouponCode";
+import ToggleInput from "@/components/ToggleInput";
+
 
 export default function NewCoupon() {
   const [loading, setLoading] = useState(false);
@@ -14,8 +16,15 @@ export default function NewCoupon() {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+      defaultValues: {
+        isActive: true,
+      },
+    });
+  const isActive = watch("isActive");
+
 
   const onSubmit = async (data) => {
     try {
@@ -84,6 +93,16 @@ export default function NewCoupon() {
               {errors.expiryDate.message}
             </p>
           )}
+
+                  <ToggleInput
+                    label="Publish your Coupon"
+                    name="isActive"
+                    trueTitle="Active"
+                    falseTitle="Draft"
+                    register={register}
+                  />
+          
+          
         </div>
 
         {/* Submit Button */}

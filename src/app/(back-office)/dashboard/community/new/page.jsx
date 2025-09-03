@@ -2,33 +2,27 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { makePostRequest } from "@/lib/apiRequest";
+import { uploadToS3 } from "@/lib/s3";
+import ImageUpload from "@/app/components/backoffice/ImageUpload";
 import SubmitButton from "@/app/components/Forminputs/SubmitButton";
 import { generateSlug } from "@/lib/generateSlug";
 import ToggleInput from "@/components/ToggleInput";
 
-// 👇 Use the new wrapper
-import { categoryImageUploader } from "@/lib/uploaders";
-// import CategoryImageUploader from "@/components/backoffice/uploaders/CategoryImageUploader";
 
-export default function NewCategory() {
+export default function NewTraining() {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const markets = [
-    { id: 1, title: "Sproutes Farmers Market" },
-    { id: 2, title: "Cabbage Farmers Market" },
-    { id: 3, title: "Carrots Farmers Market" },
-    { id: 4, title: "Broccoli Farmers Market" },
+  const categories = [
+    { id: 1, title: "Category 1" },
+    { id: 2, title: "Category 2" },
+    { id: 3, title: "Category 3" },
   ];
 
   const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({
-    defaultValues: {
-      isActive: true,
-    },
+    defaultValues: {isActive: true}
   });
-
-  const isActive = watch("isActive");
+  const isActive = watch("isActive")
 
   const onSubmit = async (data) => {
     if (!image) {
@@ -37,9 +31,9 @@ export default function NewCategory() {
     }
 
     try {
+      const fileName = `trainings/${Date.now()}-${image.name}`;
       const buffer = await image.arrayBuffer();
-      const fileName = `${Date.now()}-${image.name}`;
-      const imageUrl = await categoryImageUploader(buffer, fileName, image.type);
+      const imageUrl = await uploadToS3(buffer, fileName, image.type);
 
       const slug = generateSlug(data.title);
       const payload = {
@@ -51,13 +45,13 @@ export default function NewCategory() {
 
       console.log(payload, "payload");
 
-      await makePostRequest(
-        setLoading,
-        "api/categories",
-        payload,
-        "Category",
-        reset
-      );
+      // await makePostRequest(
+      //   setLoading,
+      //   "api/trainings",
+      //   payload,
+      //   "Training",
+      //   reset
+      // );
 
       reset();
       setImage(null);
@@ -70,15 +64,16 @@ export default function NewCategory() {
   return (
     <div className="max-w-3xl mx-auto p-6 rounded-md shadow-md bg-white dark:bg-[#0D172A] transition-colors">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Title + Market Select */}
+
+        {/* Title + Category */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-gray-800 dark:text-white font-semibold mb-1">
-              Category Title
+              Training Title
             </label>
             <input
               type="text"
-              placeholder="Type the value"
+              placeholder="Type the training title"
               {...register("title", { required: true })}
               className="w-full px-4 py-2 bg-transparent border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
@@ -86,28 +81,20 @@ export default function NewCategory() {
 
           <div>
             <label className="block text-gray-800 dark:text-white font-semibold mb-1">
-              Select Markets
+              Select Category
             </label>
             <select
-              {...register("marketIds", { required: true })}
-              className="w-full px-4 py-2 
-                         bg-transparent 
-                         border border-gray-300 dark:border-gray-600 
-                         text-gray-800 dark:text-white 
-                         rounded-md 
-                         focus:outline-none focus:ring-2 focus:ring-orange-500
-                         dark:bg-[#1E293B]"
+              {...register("categoryId", { required: true })}
+              className="w-full px-4 py-2 bg-transparent border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-[#1E293B]"
             >
-              <option value="" className="bg-white dark:bg-[#1E293B] dark:text-white">
-                -- Select Market --
-              </option>
-              {markets.map((market) => (
+              <option value="">-- Select Category --</option>
+              {categories.map((cat) => (
                 <option
-                  key={market.id}
-                  value={market.id}
+                  key={cat.id}
+                  value={cat.id}
                   className="bg-white dark:bg-[#1E293B] dark:text-white"
                 >
-                  {market.title}
+                  {cat.title}
                 </option>
               ))}
             </select>
@@ -117,41 +104,43 @@ export default function NewCategory() {
         {/* Description */}
         <div>
           <label className="block text-gray-800 dark:text-white font-semibold mb-1">
-            Category Description
+            Training Description
           </label>
           <textarea
-            placeholder="Type the value"
+            placeholder="Type the training description"
             rows={4}
             {...register("description", { required: true })}
             className="w-full px-4 py-2 bg-transparent border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
 
-        {/* Image Upload */}
+        {/* Thumbnail Upload */}
         <div>
           <label className="block text-gray-800 dark:text-white font-semibold mb-1">
-            Category Image
+            Training Thumbnail
           </label>
-          <CategoryImageUploader
-            onUpload={setImage}
-            resetTrigger={image === null}
-          />
+          <ImageUpload onUpload={setImage} resetTrigger={image === null} />
 
-          <ToggleInput
+                  <ToggleInput
             label="Publish your Category"
             name="isActive"
             trueTitle="Active"
             falseTitle="Draft"
             register={register}
           />
+
+
+
         </div>
 
-        {/* Submit Button */}
+      
+
+        {/* Submit */}
         <div className="flex justify-end">
           <SubmitButton
             isLoading={loading}
-            buttonTitle="Create Category"
-            loadingButtonTitle="Creating Category please wait..."
+            buttonTitle="Create Training"
+            loadingButtonTitle="Creating Training please wait..."
           />
         </div>
       </form>
