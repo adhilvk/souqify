@@ -7,9 +7,8 @@ import SubmitButton from "@/app/components/Forminputs/SubmitButton";
 import { generateSlug } from "@/lib/generateSlug";
 import ToggleInput from "@/components/ToggleInput";
 
-// 👇 Use the new wrapper
-// import { categoryImageUploader } from "@/lib/uploaders";
-import CategoryImageUploader from "@/components/backoffice/uploaders/CategoryImageUploader";
+// ✅ use helper directly, not component
+import { categoryImageUploader } from "@/lib/uploaders";
 
 export default function NewCategory() {
   const [image, setImage] = useState(null);
@@ -132,9 +131,16 @@ export default function NewCategory() {
           <label className="block text-gray-800 dark:text-white font-semibold mb-1">
             Category Image
           </label>
-          <CategoryImageUploader
-            onUpload={setImage}
-            resetTrigger={image === null}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
+            className="block w-full text-sm text-gray-800 dark:text-white
+                       file:mr-4 file:py-2 file:px-4
+                       file:rounded-md file:border-0
+                       file:text-sm file:font-semibold
+                       file:bg-orange-500 file:text-white
+                       hover:file:bg-orange-600"
           />
 
           <ToggleInput
